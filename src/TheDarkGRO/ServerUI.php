@@ -35,8 +35,16 @@ class ServerUI extends PluginBase implements Listener {
 	
 	const PREFIX = "§eServer §7|§r ";
 	
+<<<<<<< HEAD
 	
 	
+=======
+	public noHunger = false;
+	public noDamage = false;
+	public listofplayersonline = array();
+	public admins = array();
+	public chatsystem = true;
+>>>>>>> b7e5fd81140b9b9f4edb69e1256b2edbdcb7d7c6
 	
 	public function onEnable() {
 		
