@@ -39,6 +39,7 @@ class ServerUI extends PluginBase implements Listener {
 	public noDamage = false;
 	public listofplayersonline = array();
 	public admins = array();
+	public chatsystem = true;
 	
 	public function onEnable() {
 		
