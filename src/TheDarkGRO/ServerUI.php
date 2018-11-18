@@ -115,7 +115,7 @@ class ServerUI extends PluginBase implements Listener {
    
   
   
-    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
 	 if($command->getName() == "server") {
 		
 		$this->sendServerUI($sender);
