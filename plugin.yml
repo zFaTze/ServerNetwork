@@ -27,9 +27,9 @@ version: 1.0.0
 main: TheDarkGRO\ServerUI
 description: Server Network Settings UI
 commands:
-  menu:
+  server:
     description: Server Network Control Panel
-    usage: /menu
+    usage: /server
   addadmin:
     description: add a Player to Admin Panel
     permission: network.addadmin

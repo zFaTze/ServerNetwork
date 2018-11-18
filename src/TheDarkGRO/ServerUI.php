@@ -35,15 +35,20 @@ class ServerUI extends PluginBase implements Listener {
 	
 	const PREFIX = "§eServer §7|§r ";
 	
-	public noHunger = false;
-	public noDamage = false;
-	public listofplayersonline = array();
-	public admins = array();
+	
+	
 	
 	public function onEnable() {
 		
 		$this->getLogger()->info("§aSystem by TheDarkGRO started");
-		
+		 
+   $this->noHunger = false;
+   $this->noDamage = false;
+   $this->chatsystem = false;
+
+   $this->listofplayersonline = array();
+   $this->admins = array();
+   
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		 if(!file_exists($this->getDataFolder(). "Settings.yml")){
 		  $config = new Config($this->getDataFolder(). "Settings.yml", Config::YAML);
@@ -114,7 +119,7 @@ class ServerUI extends PluginBase implements Listener {
    
   
   
-    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
 	 if($command->getName() == "server") {
 		
 		$this->sendServerUI($sender);
@@ -137,7 +142,7 @@ class ServerUI extends PluginBase implements Listener {
         
         
        }
-	
+	 }
 	 } else if($command->getName() == "removeadmin") {
 		if(isset($args[0])) {
 		  
@@ -147,7 +152,7 @@ class ServerUI extends PluginBase implements Listener {
 		 }
 		}
 	
-	
+	return true;
 }
 
     public function sendServerUI($sender) {
