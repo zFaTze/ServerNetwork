@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TheDarkGRO;
 
 use pocketmine\plugin\PluginBase;
@@ -35,16 +37,19 @@ class ServerUI extends PluginBase implements Listener {
 	
 	const PREFIX = "§eServer §7|§r ";
 	
+  public $noDamage = false;
+  public $noHunger = false;
+  public $chatsystem = false;
+  public $listofplayerasadmin = array();
+  public $listofplayersonline = array();
+  public $admins;
+  
+
 	public function onEnable() {
 		
 		$this->getLogger()->info("§aSystem by TheDarkGRO started");
 		 
-   $this->noHunger = false;
-   $this->noDamage = false;
-   $this->chatsystem = false;
-
-   $this->listofplayersonline = array();
-   $this->admins = array();
+  
    
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		 if(!file_exists($this->getDataFolder(). "Settings.yml")){
@@ -54,14 +59,19 @@ class ServerUI extends PluginBase implements Listener {
             $config->set("main-server-port", "19132");
             $config->set("cb-server-ip", "ip.com");
             $config->set("cb-server-port", "19134");
+            $config->set("admins", null);
             $config->save();
-          }
-          
+           }
+          $config = new Config($this->getDataFolder(). "Settings.yml");
+         $this->admins = $config->get("admins");
+         
           if(!is_dir($this->getDataFolder())) {
           	
             @mkdir($this->getDataFolder());
           
           }
+
+           
           
               
         }
@@ -99,7 +109,7 @@ class ServerUI extends PluginBase implements Listener {
     public function onChat(PlayerChatEvent $event) {
     	$player = $event->getPlayer();
          
-         if($this->getConfig()->get("chat") == false) {
+         if($this->chatsystem === true) {
          	$event->setCancelled(true);
              $player->sendMessage("§cThe Chat is disabled!");
          } else {
@@ -122,35 +132,65 @@ class ServerUI extends PluginBase implements Listener {
 		$this->sendServerUI($sender);
 		
 		
-		
+		} else if($command->getName() == "adminlist") {
+     $config = new Config($this->getDataFolder(). "Settings.yml");
+     foreach($config->get("admins") as $admins){
+        $sender->sendMessage(self::PREFIX . "§cAdmins §7-=-§6 " . $admins);
+     }
+
     } else if($command->getName() == "addadmin") {
     	if(isset($args[0])) {
     	
-          if(in_array($args[0], $this->$admins)) {
+            $config = new Config($this->getDataFolder(). "Settings.yml");
+    if(in_array($sender->getName(), $config->get("admins"))){
         
            $sender->sendMessage(self::PREFIX . "§cPlayer is already an Admin!");
         
          } else {
-           if($args[0] instanceof Player) {
-          	
-           array_push($this->admins, $args[0]);
            
-          } 
+          	
+           array_push($this->listofplayerasadmin, $args[0]);
+             $config = new Config($this->getDataFolder(). "Settings.yml");
+            $config->set("admins", $this->listofplayerasadmin);
+            $config->save();
+            $config->reload();
+            $sender->sendMessage(self::PREFIX ."§aAdmin successly added!");
+          
         
         
        }
 	 }
 	 } else if($command->getName() == "removeadmin") {
 		if(isset($args[0])) {
-		  
-		  unset($this->admins[$args[0]]);
-		 
-		  
-		 }
+		    $config = new Config($this->getDataFolder(). "Settings.yml");
+		  if(in_array($sender->getName(), $config->get("admins"))){
+
+     
+		   $sender->sendMessage(self::PREFIX . "§a{$args[0]} successly removed from the Admin List");
+		   $config = new Config($this->getDataFolder(). "Settings.yml");
+       unset($this->listofplayerasadmin[$args[0]]);
+       $config->set("admins", $this->listofplayerasadmin);
+       $config->save();
+       $config->reload();
+
+
+		 } else {
+
+     }
 		}
-	
+	 }
 	return true;
 }
+
+   public function onDisable(){
+
+    $config = new Config($this->getDataFolder(). "Settings.yml");
+    $config->set("admins", $this->listofplayerasadmin);
+    $config->save();
+   
+
+
+  }
 
     public function sendServerUI($sender) {
     
@@ -187,7 +227,8 @@ class ServerUI extends PluginBase implements Listener {
               break;
               
                case 1:
-                if(in_array($player->getName(), $this->admins)) {
+                $config = new Config($this->getDataFolder(). "Settings.yml");
+		  if(in_array($player->getName(), $config->get("admins"))){
                
                  $this->sendDeveloperSettings($player);
                
@@ -243,7 +284,8 @@ class ServerUI extends PluginBase implements Listener {
           switch($data){
           	case 0:
           
-              if(in_array($player->getName(), $this->admins)) {
+              $config = new Config($this->getDataFolder(). "Settings.yml"); 
+               if(in_array($player->getName(), $config->get("admins"))){
                
                  $this->sendHunger($player);
                
@@ -257,7 +299,8 @@ class ServerUI extends PluginBase implements Listener {
                
               case 1:
               
-              if(in_array($player->getName(), $this->admins)) {
+              $config = new Config($this->getDataFolder(). "Settings.yml"); 
+                 if(in_array($player->getName(), $config->get("admins"))){
                
                  $this->sendDamage($player);
                
@@ -292,7 +335,8 @@ class ServerUI extends PluginBase implements Listener {
               
               case 5:
               
-              if(in_array($player->getName(), $this->admins)) {
+              $config = new Config($this->getDataFolder(). "Settings.yml"); 
+               if(in_array($player->getName(), $config->get("admins"))){
                
                  $this->sendChatSystem($player);
                

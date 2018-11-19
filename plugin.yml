@@ -38,4 +38,8 @@ commands:
     description: remove a Player from Admin Panel
     permission: network.removeadmin
     usage: /removeadmin
+  adminlist:
+    description: see all Admins . ServerNetwork
+    permission: network.adminlist
+    usage: /adminlist
     
