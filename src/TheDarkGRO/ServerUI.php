@@ -159,7 +159,7 @@ class ServerUI extends PluginBase implements Listener {
         
         
        }
-	 
+	 }
 	 } else if($command->getName() == "removeadmin") {
 		if(isset($args[0])) {
 		    $config = new Config($this->getDataFolder(). "Settings.yml");
@@ -176,9 +176,10 @@ class ServerUI extends PluginBase implements Listener {
 
 		 } else {
 
-     }
+     
 		}
 	 }
+	}
 	return true;
 }
 
