@@ -131,7 +131,7 @@ class ServerUI extends PluginBase implements Listener {
            $sender->sendMessage(self::PREFIX . "§cPlayer is already an Admin!");
         
          } else {
-           if($args[0] instanceof Player) {
+           
           	
            array_push($this->admins, $args[0]);
            
@@ -139,7 +139,7 @@ class ServerUI extends PluginBase implements Listener {
         
         
        }
-	 }
+	 
 	 } else if($command->getName() == "removeadmin") {
 		if(isset($args[0])) {
 		  
